@@ -1,7 +1,6 @@
 import math
 import numpy as np
 import itertools
-from collections import Counter
 import graphviz
 import pandas as pd
 
@@ -13,14 +12,10 @@ class Node:
         self.value = value
 
 class ID3DecisionTree:
-    def __init__(self, depth, sample_split, info_gain, cost):
+    def __init__(self, depth, cost_func):
         self.dtree = None
         self.max_depth = depth
-        self.min_information_gain = info_gain
-        self.max_categories = 20
-        self.counter = 0
-        self.min_samples_split = sample_split
-        self.func = cost
+        self.func = cost_func
         self.root = None
 
     def fit(self, data, target_factor):
@@ -216,21 +211,13 @@ class ID3DecisionTree:
                 return
 
             node_id = str(id(node))
-
-            # if node.value is not None:
-            #     label = f"Class: {node.value}"
-            #     dot.node(node_id, label, shape='box')
-            # else:
-            #     feature_name = node.feature
-            #     # if tree.feature_types[node.feature] == 'categorical':
-
-            #     print(feature_name)
-            #     print(node.value)
-            #     label = f"{feature_name} = {"-".join(node.value)}"
-            #     # else:
-            #     #     label = f"{feature_name} < {node.threshold:.2f}"
-            label = f"{node.feature} = {"-".join(node.value)}"
-            dot.node(node_id, label, shape='oval')
+            
+            if node.left is None or node.right is None:
+                label = f"Class: {node.value}"
+                dot.node(node_id, label, shape='box')
+            else:
+                label = f"{node.feature} = {"-".join(node.value)}"
+                dot.node(node_id, label, shape='oval')
             
             if parent_id:
                 dot.edge(parent_id, node_id, edge_label)
@@ -241,7 +228,6 @@ class ID3DecisionTree:
         add_node(self.root)
         
         dot.render("decision_tree", format="png", cleanup=True)
-
 
     def calculate_precision(self, y_true, y_pred):
     
