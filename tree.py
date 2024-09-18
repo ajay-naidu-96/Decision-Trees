@@ -193,7 +193,7 @@ class ID3DecisionTree:
 
         var,val,ig,var_type = self.get_best_split(target_factor, data)
 
-        print("Var: {0}, Val: {1}, Ig: {2}".format(var, val, ig))
+        # print("Var: {0}, Val: {1}, Ig: {2}".format(var, val, ig))
 
         left, right = self.make_split(var, val, data, var_type)
 
@@ -234,11 +234,7 @@ class ID3DecisionTree:
         if node.left is None or node.right is None:
             return node.value
 
-        print(node.feature)
-        print(row)
-
         if row[node.feature] in node.value:
-            print("Traverse: {0}".format(node.feature))
             return self.predict_sample(row, node.left)
         
         return self.predict_sample(row, node.right)
@@ -252,8 +248,8 @@ class ID3DecisionTree:
 
         
         print("Accuracy: ", self.calculate_accuracy(y_true, y_pred))
-        print("Precision: ", self.calculate_accuracy(y_true, y_pred))
-        print("Recall: ", self.calculate_accuracy(y_true, y_pred))
+        print("Precision: ", self.calculate_precision(y_true, y_pred))
+        print("Recall: ", self.calculate_recall(y_true, y_pred))
 
     def calculate_precision(self, y_true, y_pred):
     
