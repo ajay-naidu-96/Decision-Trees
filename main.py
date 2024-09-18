@@ -12,7 +12,7 @@ if __name__ == "__main__":
     parser.add_argument('--cost', type=int, default=2)
     parser.add_argument('--max_depth', type=int, default=3)
     parser.add_argument('--prune', type=bool, default=False)
-    parser.add_argument('--enable_categorical_splits', type=bool, default=True)
+    parser.add_argument('--enable_categorical_splits', type=bool, default=False)
 
     args = parser.parse_args()
 
@@ -27,7 +27,8 @@ if __name__ == "__main__":
     # max_depth = 3
     # cost = 2 # entropy = 1 gini impurity = 2
 
-    id3 = ID3DecisionTree(args.max_depth, args.cost)
+
+    id3 = ID3DecisionTree(args.max_depth, args.cost, args.enable_categorical_splits)
 
     id3.fit(df_train, args.target_column_name)
 
@@ -38,6 +39,9 @@ if __name__ == "__main__":
     print("-"*50)
     print("Test Accuracy Metrics: ")
     id3.predict(df_test, args.target_column_name)
+    print("-"*50)
+    print("Baseline Accuracy Metrics")
+    id3.calculate_baseline_accuracy(df_test[args.target_column_name])
     print("-"*50)
 
 
