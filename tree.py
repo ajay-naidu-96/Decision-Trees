@@ -126,32 +126,11 @@ class ID3DecisionTree:
             return(split_variable, split_value, split_ig, split_numeric)
 
     def make_split(self, variable, value, data, is_numeric):
-        '''
-        Given a data and a split conditions, do the split.
-        variable: variable with which make the split.
-        value: value of the variable to make the split.
-        data: data to be splitted.
-        is_numeric: boolean considering if the variable to be splitted is numeric or not.
-        '''
-        if is_numeric:
-            data_1 = data[data[variable] < value]
-            data_2 = data[(data[variable] < value) == False]
 
-        else:
-            data_1 = data[data[variable].isin(value)]
-            data_2 = data[(data[variable].isin(value)) == False]
+        data_1 = data[data[variable].isin(value)]
+        data_2 = data[(data[variable].isin(value)) == False]
 
         return(data_1,data_2)
-
-    def make_prediction(self, data, target_factor):
-
-        # Make predictions
-        if target_factor:
-            pred = data.value_counts().idxmax()
-        else:
-            pred = data.mean()
-
-        return pred
 
     def train_tree(self, data, target_factor, depth=0):
 
