@@ -229,6 +229,32 @@ class ID3DecisionTree:
         
         dot.render("decision_tree", format="png", cleanup=True)
 
+    def predict_sample(self, row, node):
+
+        if node.left is None or node.right is None:
+            return node.value
+
+        print(node.feature)
+        print(row)
+
+        if row[node.feature] in node.value:
+            print("Traverse: {0}".format(node.feature))
+            return self.predict_sample(row, node.left)
+        
+        return self.predict_sample(row, node.right)
+
+    def predict(self, test, target):
+
+        y_true = test[target].tolist()
+        y_pred = []
+        for idx, row in test.drop(target, axis=1).iterrows():
+            y_pred.append(self.predict_sample(row, self.root))
+
+        
+        print("Accuracy: ", self.calculate_accuracy(y_true, y_pred))
+        print("Precision: ", self.calculate_accuracy(y_true, y_pred))
+        print("Recall: ", self.calculate_accuracy(y_true, y_pred))
+
     def calculate_precision(self, y_true, y_pred):
     
         true_positives = sum(1 for true, pred in zip(y_true, y_pred) if true == "M" and pred == "M")

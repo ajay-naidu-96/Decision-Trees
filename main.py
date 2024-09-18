@@ -16,4 +16,6 @@ if __name__ == "__main__":
 
     id3.visualize_tree()
 
+    id3.predict(df_val, 'Diagnosis')
+
 
