@@ -11,8 +11,8 @@ if __name__ == "__main__":
     parser.add_argument('--target_column_name', type=str, required=True, default="Diagnosis")
     parser.add_argument('--cost', type=int, default=2)
     parser.add_argument('--max_depth', type=int, default=3)
-    parser.add_argument('--prune', type=bool, default=False)
     parser.add_argument('--enable_categorical_splits', type=bool, default=False)
+    parser.add_argument('--enable_prune', type=bool, default=False)
 
     args = parser.parse_args()
 
@@ -27,8 +27,9 @@ if __name__ == "__main__":
     # max_depth = 3
     # cost = 2 # entropy = 1 gini impurity = 2
 
-
-    id3 = ID3DecisionTree(args.max_depth, args.cost, args.enable_categorical_splits)
+    id3 = ID3DecisionTree(args.max_depth, 
+            args.cost, args.enable_categorical_splits,
+            args.enable_prune)
 
     id3.fit(df_train, args.target_column_name)
 

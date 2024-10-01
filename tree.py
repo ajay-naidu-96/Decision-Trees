@@ -12,8 +12,13 @@ class Node:
         self.right = right
         self.value = value
 
+    def count_classes(self, y):
+        counts = y.value_counts()
+        
+        return counts
+
 class ID3DecisionTree:
-    def __init__(self, depth, cost_func, enable_categorical_splits):
+    def __init__(self, depth, cost_func, enable_categorical_splits, enable_prune):
         self.dtree = None
         self.max_depth = depth
         self.func = cost_func
@@ -21,6 +26,7 @@ class ID3DecisionTree:
         self.enable_categorical_options = enable_categorical_splits
         self.dominant_class = None
         self.dominant_prob = None
+        self.prune = enable_prune
 
     def fit(self, data, target_factor):
 
@@ -132,6 +138,10 @@ class ID3DecisionTree:
 
         return(data_1,data_2)
 
+    # def prune(self, data, left_tree, right_tree, target_factor):
+
+
+
     def train_tree(self, data, target_factor, depth=0):
 
         if (depth >= self.max_depth or len(data[target_factor].value_counts()) == 1):
@@ -141,10 +151,16 @@ class ID3DecisionTree:
 
         left, right = self.make_split(var, val, data, var_type)
 
-        left = self.train_tree(left, target_factor, depth + 1)
-        right = self.train_tree(right, target_factor, depth + 1)
+        left_tree = self.train_tree(left, target_factor, depth + 1)
+        right_tree = self.train_tree(right, target_factor, depth + 1)
 
-        return Node(var, val, left, right)
+        if (self.prune):
+            # code for pruning
+            left_count = left[target_factor].value_counts()
+            right_count = right[target_factor].value_counts()
+            # the text book does not contain any information beyond this
+            
+        return Node(var, val, left_tree, right_tree)
 
     def visualize_tree(self):
         dot = graphviz.Digraph()
